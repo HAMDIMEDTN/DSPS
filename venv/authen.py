@@ -1,6 +1,6 @@
 import re
 #from getpass import getpass
-
+#getpass ne fonctionne pas sur pycharm pour utlise un mot de pass chifree
 def check(email):
     regex = '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
     return re.match(regex, email) is not None
