@@ -28,17 +28,24 @@ def enregistrement():
             print("Le password doit contenir 1 lettre majuscule, 1 lettre minuscule, 1 chiffre, 1 caractère spécial et être de longueur 8.")
 
     with open('users.txt', 'a') as file:
-        file.write(f"Email: {email}, Password: {password}\n")
+
+        sha256 = hashlib.sha256()
+        sha256.update(password.encode())
+        hash_result = sha256.hexdigest()
+
+        file.write(f"Email: {email}, Password: {hash_result}\n")
 
 
 def authentification():
     while True:
         email = input("Entrez votre email : ")
         password = input("Entrez votre mot de passe : ")
-
+        sha256 = hashlib.sha256()
+        sha256.update(password.encode())
+        hash_result = sha256.hexdigest()
         with open('users.txt', 'r') as file:
             for line in file:
-                if f"Email: {email}, Password: {password}" in line:
+                if f"Email: {email}, Password: {hash_result}" in line:
                     print("Authentification réussie!")
                     menu()
 
