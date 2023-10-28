@@ -1,4 +1,5 @@
 import re
+import hashlib
 #from getpass import getpass
 #getpass ne fonctionne pas sur pycharm pour utlise un mot de pass chifree
 def check(email):
@@ -48,21 +49,55 @@ def authentification():
 
 def menu():
     while True :
+        mot = input("donner un mot a hache ")
         print("1- Taper 1 pour Hachez le mot par sha256")
         print("2- Taper 2 pour Hachez le mot en génerant unsalt (bcrypt) ")
         print("3- Taper 3 pour Attaquer par Dictionnaire le Mot inséré ")
-        mot= input("donner un mot a hache ")
-        match mot :
+        choix = input("donner votre choix ")
+        match choix :
             case "1":
-                print("Hachez le mot par sha256")
+
+                sha256 = hashlib.sha256()
+                sha256.update(mot.encode())
+                hash_result = sha256.hexdigest()
+                print(f"Le hachage SHA-256 du mot '{mot}' est : {hash_result}")
                 quit()
+
+
             case "2":
-                print("Hachez le mot en génerant unsalt (bcrypt)")
+                import bcrypt
+
+                salt = bcrypt.gensalt()
+
+                mot_de_passe_hache = bcrypt.hashpw(mot.encode(), salt)
+
+                print(f"Le mot de passe haché avec le salt est : {mot_de_passe_hache.decode()}")
+
                 quit()
             case "3":
-                print("Attaquer par Dictionnaire le Mot inséré ")
+                from datetime import datetime
+                dic = open('dic.txt', mode='r')
+
+                F = False
+                n = 0
+                t = datetime.now()
+                for pwd in dic:
+                    pwd = pwd.strip()
+                    n += 1
+                    if mot == pwd:
+                        print("mot de passe trouver :  ", pwd, "pensez a le changer ")
+                        print(n, "mots testes en ", (datetime.now() - t).total_seconds(), "secondes")
+                        dic.close()
+                        F = True
+                        break
+                print()
+                if not F:
+                    print("mot de passe non trouve , aucun hache ne correspond a votre hache ", mot)
+                    dic.close()
+
+
+
                 quit()
             case _ :
                 print ("merci de inser 1 , 2 ou 3 ")
-
 
